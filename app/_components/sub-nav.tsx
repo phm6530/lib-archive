@@ -10,8 +10,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
-export default function SubNav() {
+export default function SubNav({ title }: { title: string }) {
   const parmas = useParams<{ category: string; id: string }>();
   console.log(parmas.category, parmas.id);
 
@@ -19,18 +20,16 @@ export default function SubNav() {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/">
+          <Link href="/">
             <HomeIcon size={16} aria-hidden="true" />
             <span className="sr-only">Home</span>
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
         {parmas.category && (
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/libs/${parmas.category}`}>
-                {parmas.category}
-              </BreadcrumbLink>
+              <Link href={`/${parmas.category}`}>{parmas.category}</Link>
             </BreadcrumbItem>
           </>
         )}
@@ -39,7 +38,7 @@ export default function SubNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{parmas.id}</BreadcrumbPage>
+              <BreadcrumbPage>{title}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}

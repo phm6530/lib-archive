@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Grid from "@/components/layout/grid";
-import Nav from "@/components/layout/nav";
+
 import Footer from "@/components/layout/footer";
+import Nav from "@/components/layout/nav";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "개인라이브러리 아카이브",
@@ -17,12 +19,15 @@ export default function RootLayout({
   return (
     <html lang="ko" className="dark">
       <body className="bg-zinc-900 ">
-        <Grid>
-          {/* nav */}
-          <Nav />
-          {children}
-          <Footer />
-        </Grid>
+        <Providers>
+          <Grid>
+            {" "}
+            {/* nav */}
+            <Nav />
+            {children}
+            <Footer />
+          </Grid>
+        </Providers>
       </body>
     </html>
   );
