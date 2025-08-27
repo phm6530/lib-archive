@@ -14,8 +14,6 @@ import {
   NOTION_SEGMENT,
   NOTION_TOKEN,
 } from "../constant/var";
-import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
 import HeroBanner from "../_components/hero";
 
 interface NotionPage {
@@ -45,7 +43,7 @@ interface NotionPage {
   };
 }
 
-type ReponseType = {
+export type ReponseType = {
   results: NotionPage[];
 };
 
@@ -81,7 +79,7 @@ export default async function Home() {
   return (
     <>
       <HeroBanner />
-      <div className="flex flex-col  gap-4 mt-7">
+      <div className="grid grid-cols-1  gap-4 mt-7">
         {posts.map((post, idx) => (
           <Link
             href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}

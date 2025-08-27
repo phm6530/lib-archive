@@ -1,46 +1,20 @@
 import HeroBanner from "@/app/_components/hero";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
 import { notFound } from "next/navigation";
-
-const libraries = {
-  react: [
-    {
-      name: "@FullPage-lib/React",
-      description: "full page 개인라이브러리",
-    },
-    {
-      name: "@Modal-lib/React",
-      description: "modal 개인라이브러리",
-    },
-  ],
-  utils: [
-    {
-      name: "cn",
-      description: "utility function for tailwind-merge",
-    },
-  ],
-  hooks: [
-    {
-      name: "use-local-storage",
-      description: "custom hook for local storage",
-    },
-  ],
-  animation: [
-    {
-      name: "use-local-storage",
-      description: "custom hook for local storage",
-    },
-  ],
-};
-
-type Category = keyof typeof libraries;
+import { ReponseType } from "../page";
+import {
+  NOTION_BASE_URL,
+  NOTION_ID,
+  NOTION_SEGMENT,
+  NOTION_TOKEN,
+} from "@/app/constant/var";
+import Link from "next/link";
 
 export default async function LibsPage({
   params,
@@ -49,25 +23,70 @@ export default async function LibsPage({
 }) {
   const { category } = await params;
 
-  if (!Object.keys(libraries).includes(category)) {
+  const response = await fetch(
+    `${NOTION_BASE_URL}/${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
+    {
+      method: "POST",
+      headers: {
+        "Notion-Version": "2022-06-28",
+        authorization: `Bearer ${NOTION_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+      body: JSON.stringify({
+        filter: {
+          property: "카테고리",
+          select: {
+            equals: category,
+          },
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
     notFound();
   }
 
-  const libs = libraries[category as Category] || [];
+  const result = (await response.json()) as ReponseType;
+  const posts = result.results.map((page) => {
+    return {
+      id: page.id,
+      url: page.url,
+      제목: page.properties?.제목?.title?.[0]?.plain_text ?? "",
+      내용: page.properties?.내용?.rich_text?.[0]?.plain_text ?? "",
+      카테고리: page.properties?.카테고리?.select?.name ?? "",
+      작성일: page.properties?.작성일?.date?.start ?? "",
+    };
+  });
+  console.log(posts);
 
   return (
     <>
       <HeroBanner />
       <div className="flex w-full flex-col gap-6 ">
-        {libs.map((lib) => (
-          <Card key={lib.name} className="">
-            <CardHeader>
-              <CardTitle>{lib.name}</CardTitle>
-              <CardDescription className="text-xs mt-3">
-                {lib.description}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        {posts.map((post, idx) => (
+          <Link
+            href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}
+            key={`${post.id}-${idx}`}
+          >
+            <Card className="cursor-pointer transition-colors border-indigo-200/20 hover:border-indigo-300 h-full flex flex-col">
+              <CardHeader className="flex-grow">
+                <div className="flex justify-between items-start text-xs text-muted-foreground mb-2">
+                  <span>{post.카테고리}</span>
+                  <span>
+                    {new Date(post.작성일).toLocaleDateString("ko-KR")}
+                  </span>
+                </div>
+                <CardTitle className="text-lg font-semibold">
+                  {post.제목}
+                </CardTitle>
+                <CardDescription className="text-xs leading-relaxed line-clamp-2 mt-1 md:w-[60%] break-keep">
+                  {post.내용}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
       </div>
     </>
