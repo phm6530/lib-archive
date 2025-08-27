@@ -1,9 +1,11 @@
 import SubNav from "@/app/_components/sub-nav";
 import {
+  GITHUB_TOKEN,
   NOTION_BASE_URL,
   NOTION_SEGMENT,
   NOTION_TOKEN,
 } from "@/app/constant/var";
+import ReactMarkdown from "react-markdown";
 
 type NotionPageMeta = {
   id: string;
@@ -52,6 +54,20 @@ export default async function Page({
     cache: "no-cache",
   };
 
+  const res = await fetch(
+    "https://api.github.com/repos/phm6530/fullpage-react/readme",
+    {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json", // 명시 권장
+      },
+      cache: "force-cache",
+    }
+  );
+
+  const data = await res.json(); // 여기 반드시 await
+  const markdown = Buffer.from(data.content, "base64").toString("utf-8");
+
   const [contentsRes, metaRes] = await Promise.all([
     fetch(
       `${NOTION_BASE_URL}/${NOTION_SEGMENT.DETAIL_CONTENTS}/${postId}/children`,
@@ -76,22 +92,23 @@ export default async function Page({
   const metaData = meta as NotionPageMeta;
 
   return (
-    <div className="py-10 flex flex-col gap-5">
+    <div className="py-5 flex flex-col gap-5">
       {" "}
-      <div className="pt-10">
+      <div className="">
         <SubNav title={metaData.properties.제목.title[0].plain_text} />
       </div>
-      <h1 className="text-5xl my-3">
+      <h1 className="text-5xl my-3 mt-10">
         {metaData.properties.제목.title[0].plain_text}
       </h1>
       <div>
-        <p className="text-sm leading-relaxed text-zinc-300">
+        <p className="text-base leading-relaxed text-zinc-300">
           {metaData.properties.내용.rich_text[0].plain_text}
         </p>
         <span className="text-xs opacity-50">
           {metaData.properties.작성일.date?.start}
         </span>
       </div>
+      <ReactMarkdown>{markdown}</ReactMarkdown>
     </div>
   );
 }

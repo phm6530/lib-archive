@@ -4,7 +4,6 @@ import { HomeIcon } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -21,14 +20,13 @@ export default function SubNav({ title }: { title: string }) {
       <BreadcrumbList>
         <BreadcrumbItem>
           <Link href="/">
-            <HomeIcon size={16} aria-hidden="true" />
-            <span className="sr-only">Home</span>
+            <HomeIcon size={13} aria-hidden="true" />
           </Link>
         </BreadcrumbItem>
         {parmas.category && (
           <>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
+            <BreadcrumbItem className="text-xs">
               <Link href={`/${parmas.category}`}>{parmas.category}</Link>
             </BreadcrumbItem>
           </>
@@ -37,8 +35,8 @@ export default function SubNav({ title }: { title: string }) {
         {parmas.id && (
           <>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{title}</BreadcrumbPage>
+            <BreadcrumbItem className="text-xs ">
+              <BreadcrumbPage className="text-xs">{title}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
