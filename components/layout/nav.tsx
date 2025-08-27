@@ -2,33 +2,12 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { getCategories } from "./action/nav-action";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-const navigationLinks = [
-  { href: "/", label: "Home", active: true },
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
-];
-
-type Category = {
-  name: string;
-  path: string;
-};
+import { Briefcase, Github, Rss } from "lucide-react";
 
 export default function Component() {
   const pathname = usePathname();
@@ -62,14 +41,55 @@ export default function Component() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 max-md:hidden">
-          <Button asChild size="sm" className="text-sm">
-            <a href="#">
-              <span className="flex items-baseline gap-2">
-                Cart
-                <span className="text-primary-foreground/60 text-xs">2</span>
-              </span>
-            </a>
+        <div className="flex items-center  max-md:hidden">
+          {/* GitHub Icon */}
+          <Button
+            asChild
+            variant={"ghost"}
+            size={"icon"}
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Link
+              href={"https://github.com/phm6530/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <Github className="h-5 w-5" />
+            </Link>
+          </Button>
+
+          {/* Portfolio Icon */}
+          <Button
+            asChild
+            variant={"ghost"}
+            size={"icon"}
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Link
+              href={"https://www.h-creations.com/"} // Placeholder link
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Briefcase className="h-5 w-5" />
+            </Link>
+          </Button>
+
+          {/* Blog Icon */}
+          <Button
+            asChild
+            variant={"ghost"}
+            size={"icon"}
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Link
+              href={"https://blog.h-creations.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Blog"
+            >
+              <Rss className="h-5 w-5" />
+            </Link>
           </Button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Link } from "lucide-react";
 import React, { useState } from "react";
 
 interface DemoIframeProps {
@@ -13,10 +14,12 @@ const DemoIframe: React.FC<DemoIframeProps> = ({ src, title }) => {
 
   const handleLoad = () => setIsLoading(false);
   return (
-    <div className="my-5">
-      <div className="relative w-full h-[500px] border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+    <div className="my-5 pb-10 flex flex-col">
+      <div className="relative w-full aspect-[16/9]  border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900">
         {isLoading && (
-          <div className="absolute inset-0 w-full h-full bg-zinc-200 dark:bg-zinc-800 animate-pulse"></div>
+          <div className="flex justify-center items-center absolute inset-0 w-full h-full bg-zinc-200 dark:bg-zinc-800 animate-pulse">
+            Demo loading...
+          </div>
         )}
 
         <iframe
@@ -31,10 +34,12 @@ const DemoIframe: React.FC<DemoIframeProps> = ({ src, title }) => {
         />
       </div>
       <Button
-        className="cursor-pointer mt-2 text-xs"
+        className="cursor-pointer mt-2 text-xs ml-auto underline"
+        variant={"link"}
         onClick={() => window.open(src, "_blank")}
       >
-        브라우저로 보기
+        <Link />
+        Demo - 브라우저로 보기
       </Button>
     </div>
   );

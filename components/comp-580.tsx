@@ -1,30 +1,30 @@
-import { useId } from "react"
-import { SearchIcon } from "lucide-react"
+import { useId } from "react";
+import { SearchIcon } from "lucide-react";
 
-import Logo from "@/components/logo"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "#", label: "Products" },
   { href: "#", label: "Categories" },
   { href: "#", label: "Deals" },
-]
+];
 
 export default function Component() {
-  const id = useId()
+  const id = useId();
 
   return (
     <header className="border-b px-4 md:px-6">
@@ -131,7 +131,7 @@ export default function Component() {
               </NavigationMenuList>
             </NavigationMenu>
             {/* Search form */}
-            <div className="relative">
+            {/* <div className="relative">
               <Input
                 id={id}
                 className="peer h-8 ps-8 pe-2"
@@ -141,7 +141,7 @@ export default function Component() {
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
                 <SearchIcon size={16} />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Right side */}
@@ -160,5 +160,5 @@ export default function Component() {
         </div>
       </div>
     </header>
-  )
+  );
 }

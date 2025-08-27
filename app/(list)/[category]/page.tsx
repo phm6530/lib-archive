@@ -15,6 +15,9 @@ import {
   NOTION_TOKEN,
 } from "@/app/constant/var";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import SubNav from "@/app/_components/sub-nav";
 
 export default async function LibsPage({
   params,
@@ -57,17 +60,18 @@ export default async function LibsPage({
       내용: page.properties?.내용?.rich_text?.[0]?.plain_text ?? "",
       카테고리: page.properties?.카테고리?.select?.name ?? "",
       작성일: page.properties?.작성일?.date?.start ?? "",
+      stack: page.properties.stack.multi_select,
     };
   });
 
   return (
     <>
+      <SubNav />
       <HeroBanner
         title={category.charAt(0).toUpperCase() + category.slice(1)}
         description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
       />
-
-      <div className="flex w-full flex-col gap-4 ">
+      <div className="w-full grid grid-cols-2 gap-4 ">
         {posts.map((post, idx) => (
           <Link
             href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}
@@ -76,17 +80,19 @@ export default async function LibsPage({
             <Card className="cursor-pointer transition-colors border-indigo-200/20 hover:border-indigo-300 h-full flex flex-col">
               <CardHeader className="flex-grow">
                 <div className="flex justify-between items-start text-xs text-muted-foreground mb-2">
-                  <span>{post.카테고리}</span>
+                  <Badge variant="secondary">{post.카테고리}</Badge>
                   <span>
-                    {new Date(post.작성일).toLocaleDateString("ko-KR")}
+                    {post.작성일 !== "Invalid Date"
+                      ? new Date(post.작성일).toLocaleDateString("ko-KR")
+                      : "-"}
                   </span>
                 </div>
-                <CardTitle className="text-lg font-semibold">
+                <CardTitle className="text-xl font-semibold">
                   {post.제목}
                 </CardTitle>
                 <CardDescription className="text-xs leading-relaxed line-clamp-2 mt-1 md:w-[60%] break-keep">
                   {post.내용}
-                </CardDescription>
+                </CardDescription>{" "}
               </CardHeader>
             </Card>
           </Link>

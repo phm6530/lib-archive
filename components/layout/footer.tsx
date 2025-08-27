@@ -18,32 +18,6 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} H-Creations. All Rights Reserved.
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <a
-            href="https://github.com/your-github"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Github className="h-5 w-5" />
-          </a>
-          <a
-            href="https://twitter.com/your-twitter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Twitter className="h-5 w-5" />
-          </a>
-          <a
-            href="https://www.blog.h-creations.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Rss className="h-5 w-5" />
-          </a>
-        </div>
       </div>
     </footer>
   );
