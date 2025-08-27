@@ -1,15 +1,19 @@
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
 
-export default function HeroBanner() {
+export default function HeroBanner({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <>
       <div className="flex flex-col gap-6 pt-20 ">
-        <h1 className="text-5xl font-bold">Personal Library</h1>
+        <h1 className="text-5xl font-bold">{title}</h1>
         <div className="flex flex-col pb-5">
-          <p className="text-muted-foreground text-xs">
-            React,Next에서 주요 사용될 개인라이브러리 모음입니다.
-          </p>
+          <p className="text-muted-foreground text-xs">{description}</p>
 
           {/* Search form */}
           <div className="relative mt-10">

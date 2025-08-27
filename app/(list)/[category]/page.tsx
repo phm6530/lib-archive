@@ -59,12 +59,15 @@ export default async function LibsPage({
       작성일: page.properties?.작성일?.date?.start ?? "",
     };
   });
-  console.log(posts);
 
   return (
     <>
-      <HeroBanner />
-      <div className="flex w-full flex-col gap-6 ">
+      <HeroBanner
+        title={category.charAt(0).toUpperCase() + category.slice(1)}
+        description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
+      />
+
+      <div className="flex w-full flex-col gap-4 ">
         {posts.map((post, idx) => (
           <Link
             href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}

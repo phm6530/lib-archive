@@ -8,6 +8,8 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";
+import Image from "next/image";
+import DemoIframe from "./_components/demo-iframe";
 
 // 공통
 // 공통 텍스트
@@ -35,6 +37,15 @@ type NotionBlock =
       paragraph: {
         rich_text: NotionRichText[];
         color: string;
+      };
+    }
+  | {
+      object: "block";
+      id: string;
+      type: "embed";
+      embed: {
+        caption: string;
+        url: string;
       };
     }
   | {
@@ -112,7 +123,7 @@ export default async function Page({
       "Notion-Version": "2022-06-28",
       authorization: `Bearer ${NOTION_TOKEN}`,
     },
-    cache: "no-cache",
+    cache: "force-cache",
   };
 
   const [contentsRes, metaRes] = await Promise.all([
@@ -143,6 +154,7 @@ export default async function Page({
     metaData.properties.repoName.rich_text[0]?.plain_text ?? null;
 
   let markdown = null;
+
   if (!!repoName) {
     const res = await fetch(
       `https://api.github.com/repos/phm6530/${repoName}/readme`,
@@ -151,7 +163,7 @@ export default async function Page({
           Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github.v3+json", // 명시 권장
         },
-        cache: "no-cache",
+        cache: "force-cache",
         next: {
           tags: [`git:${repoName}`],
         },
@@ -190,6 +202,13 @@ export default async function Page({
               ? block.image.file?.url
               : block.image.external?.url,
           caption: block.image.caption.map((rt) => rt.plain_text).join(""),
+        };
+
+      case "embed":
+        return {
+          id: block.id,
+          type: "embed",
+          url: block.embed.url,
         };
     }
   });
@@ -231,11 +250,18 @@ export default async function Page({
 
           case "image":
             return (
-              <figure key={e.id}>
-                <img src={e.url} alt={e.caption} />
-                {e.caption && <figcaption>{e.caption}</figcaption>}
-              </figure>
+              <Image
+                key={e.id}
+                src={e.url!}
+                alt={e.caption ?? "image"}
+                width={800}
+                height={600}
+                placeholder="blur"
+                blurDataURL="/tiny-placeholder.png"
+              />
             );
+          case "embed":
+            return <DemoIframe src={e.url!} key={e.id} />;
 
           default:
             return <div key={e.id}>Unsupported block: {e.type}</div>;
@@ -249,6 +275,7 @@ export default async function Page({
             components={{
               code(props) {
                 const { node, ...rest } = props;
+                void node;
                 return <i {...rest} />;
               },
             }}
