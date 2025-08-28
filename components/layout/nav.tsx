@@ -11,19 +11,8 @@ import { getCategories } from "./action/nav-action";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  Book,
-  BookA,
-  Briefcase,
-  Github,
-  Presentation,
-  Rss,
-  TestTube,
-  User,
-  Workflow,
-} from "lucide-react";
+import { Book, Github, Presentation, User } from "lucide-react";
 import SignIn from "../modal-login";
-import { useEffect, useState } from "react";
 
 export default function Component() {
   const pathname = usePathname();
@@ -40,7 +29,7 @@ export default function Component() {
       <div className="flex h-16 items-center justify-between gap-4">
         <div className="flex flex-1 items-center gap-2">
           {/* Main nav */}
-          <div className="flex flex-1 items-center gap-6 max-md:justify-between">
+          <div className="flex flex-1 items-center gap-6 ">
             {categories.map((link, index) => (
               <Button
                 variant={"link"}

@@ -34,7 +34,9 @@ export default function HeroBanner({
   return (
     <>
       <div className="flex flex-col gap-6 pt-10 pb-5">
-        <h1 className="text-5xl font-bold tracking-wide">{title}</h1>
+        <h1 className="text-5xl md:text-6xl font-bold tracking-wide leading-tight whitespace-pre-line">
+          {title}
+        </h1>
         <div className="flex flex-col pb-5">
           <p className="text-muted-foreground text-sm ">{description}</p>
           <form onSubmit={searchHandler}>
@@ -42,8 +44,8 @@ export default function HeroBanner({
             <div className="relative mt-10">
               <Input
                 value={value ?? ""}
-                className="peer h-8 ps-12 pe-2 py-7 rounded-lg"
-                placeholder="찾으실 라이브러리의 검색어를 입력해주세요"
+                className="peer h-8 ps-12 pe-2 py-7 rounded-full"
+                placeholder="Find a library..."
                 type="search"
                 onChange={(e) => setValue(e.target.value)}
               />

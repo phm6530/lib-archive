@@ -23,7 +23,6 @@ interface NotionDatabase {
 export const getCategories = unstable_cache(
   async () => {
     try {
-      console.log("--- [Server Action] Fetching categories from Notion... ---");
       const response = await fetch(
         `${NOTION_BASE_URL}/${NOTION_SEGMENT.LIST}/${NOTION_ID}`,
         {
@@ -34,8 +33,8 @@ export const getCategories = unstable_cache(
           },
           next: {
             tags: ["categories"],
-            revalidate: 3600, // Revalidate every hour
           },
+          cache: "force-cache",
         }
       );
 

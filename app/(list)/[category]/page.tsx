@@ -1,16 +1,11 @@
 import HeroBanner from "@/app/_components/hero";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import { ReponseType } from "../page";
 import { NOTION_ID, NOTION_SEGMENT } from "@/app/constant/var"; // NOTION_BASE_URL is now used in notion-service
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+
 import SubNav from "@/app/_components/sub-nav";
 import { queryNotionDatabase } from "@/lib/notion-service"; // New import
+import Libitem from "@/app/_components/lib-item";
 
 export default async function LibsPage({
   params,
@@ -64,31 +59,9 @@ export default async function LibsPage({
         title={category.charAt(0).toUpperCase() + category.slice(1)}
         description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
       />
-      <div className="w-full grid grid-cols-2 gap-4 ">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 ">
         {filteredPosts.map((post, idx) => (
-          <Link
-            href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}
-            key={`${post.id}-${idx}`}
-          >
-            <Card className="cursor-pointer transition-colors border-indigo-200/20 hover:border-indigo-300 h-full flex flex-col">
-              <CardHeader className="flex-grow">
-                <div className="flex justify-between items-start text-xs text-muted-foreground mb-2">
-                  <Badge variant="secondary">{post.카테고리}</Badge>
-                  <span>
-                    {post.작성일 !== "Invalid Date"
-                      ? new Date(post.작성일).toLocaleDateString("ko-KR")
-                      : "-"}
-                  </span>
-                </div>
-                <CardTitle className="text-xl font-semibold">
-                  {post.제목}
-                </CardTitle>
-                <CardDescription className="text-xs leading-relaxed line-clamp-2 mt-1 md:w-[60%] break-keep">
-                  {post.내용}
-                </CardDescription>{" "}
-              </CardHeader>
-            </Card>
-          </Link>
+          <Libitem key={`${post.id}-${idx}`} {...post} />
         ))}
       </div>
     </>

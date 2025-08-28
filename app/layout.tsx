@@ -21,7 +21,6 @@ export default function RootLayout({
       <body className="bg-gradient-to-l to-zinc-950 from-zinc-900 ">
         <Providers>
           <Grid>
-            {" "}
             {/* nav */}
             <Nav />
             {children}

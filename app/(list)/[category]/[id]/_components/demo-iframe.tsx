@@ -15,7 +15,7 @@ const DemoIframe: React.FC<DemoIframeProps> = ({ src, title }) => {
   const handleLoad = () => setIsLoading(false);
   return (
     <div className="my-5 pb-10 flex flex-col">
-      <div className="relative w-full aspect-[16/9]  border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+      <div className="relative w-full aspect-[2/2] md:aspect-[16/9]  border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900">
         {isLoading && (
           <div className="flex justify-center items-center absolute inset-0 w-full h-full bg-zinc-200 dark:bg-zinc-800 animate-pulse">
             Demo loading...

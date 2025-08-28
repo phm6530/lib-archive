@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose, // Import DialogClose
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +30,7 @@ export const loginSchema = z.object({
 
 export default function SignIn({ children }: { children: ReactNode }) {
   const id = useId();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control dialog open/close
 

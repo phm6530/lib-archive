@@ -25,7 +25,6 @@ import DemoIframe from "./_components/demo-iframe";
 import { Metadata } from "next";
 import { queryNotionDatabase } from "@/lib/notion-service";
 import { ReponseType } from "../../page";
-import { Button } from "@/components/ui/button";
 import RevaildateController from "./_components/revaildate-controller";
 
 // --- 1. 타입 정의: Notion API 원본 타입과 우리가 사용할 파싱된 타입 분리 ---
@@ -158,7 +157,7 @@ const renderBlock = (block: NotionBlock) => {
   switch (type) {
     case "paragraph":
       return (
-        <p key={id} className="leading-relaxed">
+        <p key={id} className="leading-loose md:text-base text-sm break-keep">
           {value.rich_text.length === 0
             ? "\u00A0"
             : value.rich_text.map((t: NotionRichText) => t.plain_text).join("")}
@@ -319,7 +318,7 @@ export default async function Page({
                 }
               />
             </div>
-            <h1 className="text-4xl md:text-5xl pt-10 font-bold tracking-tighter text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-4xl md:text-5xl pt-10 font-bold tracking-tighter text-zinc-900 dark:text-zinc-100 break-keep leading-relaxed">
               {metaData.properties.제목.title[0].plain_text}
             </h1>
             <p className="max-w-2xl text-sm  leading-loose border-l pl-4  border-zinc-200 mt-10 mb-20 text-zinc-600 dark:text-zinc-400 ">
