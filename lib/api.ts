@@ -110,11 +110,11 @@ export async function fetcher<T>(
     );
   }
 
-  if (tags && tags.length > 0) {
-    for (const tag of tags) {
-      revalidateTag(tag);
-    }
-  }
+  // if (tags && tags.length > 0) {
+  //   for (const tag of tags) {
+  //     revalidateTag(tag);
+  //   }
+  // }
 
   return response.json() as Promise<T>;
 }

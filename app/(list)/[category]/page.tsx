@@ -28,7 +28,7 @@ export default async function LibsPage({
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
     { filter: categoryFilter },
-    { cache: "no-store" }
+    { cache: "force-cache", revalidate: 3600 }
   );
 
   const posts = result.results.map((page) => {
@@ -43,7 +43,6 @@ export default async function LibsPage({
     };
   });
 
-  // Filter in code for precision
   const filteredPosts = keyword
     ? posts.filter(
         (post) =>

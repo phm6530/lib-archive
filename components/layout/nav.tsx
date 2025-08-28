@@ -7,23 +7,37 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import { getCategories } from "./action/nav-action";
-import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Book, Github, Presentation, User } from "lucide-react";
 import SignIn from "../modal-login";
 
-export default function Component() {
+export interface NotionDatabase {
+  properties: {
+    카테고리: {
+      select: {
+        options: Array<{
+          name: string;
+        }>;
+      };
+    };
+  };
+}
+
+export default function Component({ response }: { response: NotionDatabase }) {
   const pathname = usePathname();
   const path = pathname.split("/");
 
-  const { data } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getCategories,
-  });
+  const notionCategories =
+    response.properties.카테고리.select.options.map((e) => {
+      return {
+        name: e.name,
+        path: `/${e.name.toLowerCase()}`,
+      };
+    }) ?? [];
 
-  const categories = data ?? [{ name: "Home", path: "/" }];
+  const categories = [{ name: "Home", path: "/" }, ...notionCategories];
+
   return (
     <header className="border-b ">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -35,7 +49,7 @@ export default function Component() {
                 variant={"link"}
                 className={cn(
                   "text-muted-foreground hover:text-primary py-1.5 px-0 font-medium",
-                  path[1] === link.path.slice(1) ? "text-primary" : ""
+                  path[1] === link.path.slice(1) ? "text-primary underline" : ""
                 )}
                 key={`${link.name}-${index}`}
               >

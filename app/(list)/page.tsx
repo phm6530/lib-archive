@@ -49,7 +49,7 @@ export default async function Home({
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
     {},
-    { cache: "no-store" }
+    { cache: "force-cache", revalidate: 3600 }
   );
 
   const posts = result.results.map((page) => {

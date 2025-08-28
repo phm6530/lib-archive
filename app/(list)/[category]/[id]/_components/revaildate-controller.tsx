@@ -68,7 +68,7 @@ export default function RevaildateController({
   }
 
   return (
-    <div className="p-5 border border-border rounded-lg mb-5 flex items-center gap-4 bg-zinc-950">
+    <div className="p-5  rounded-lg flex items-center gap-4 bg-zinc-900">
       <ShieldUser className="text-teal-300" size={20} />
       {!!repoName && (
         <div className="flex items-center gap-2">
