@@ -1,4 +1,4 @@
-import { Github } from "lucide-react";
+import { Database, GitBranch, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -8,8 +8,10 @@ import SubNav from "@/app/_components/sub-nav";
 import {
   GITHUB_TOKEN,
   NOTION_BASE_URL,
+  NOTION_ID,
   NOTION_SEGMENT,
   NOTION_TOKEN,
+  REVADILTE_PRE,
 } from "@/app/constant/var";
 import { ScrollProgress } from "@/components/animate-ui/components/scroll-progress";
 import {
@@ -18,9 +20,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import CodeViewer from "./_components/code-viewer";
 import DemoIframe from "./_components/demo-iframe";
+import { Metadata } from "next";
+import { queryNotionDatabase } from "@/lib/notion-service";
+import { ReponseType } from "../../page";
+import { Button } from "@/components/ui/button";
+import RevaildateController from "./_components/revaildate-controller";
 
 // --- 1. 타입 정의: Notion API 원본 타입과 우리가 사용할 파싱된 타입 분리 ---
 
@@ -57,6 +63,7 @@ type NotionBlock = {
     caption: NotionRichText[];
   };
   embed?: { url: string };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 
@@ -64,6 +71,8 @@ type NotionBlock = {
 type NotionPageMeta = {
   id: string;
   url: string;
+  created_time: Date;
+  last_edited_time: Date;
   properties: {
     제목: { type: "title"; title: { plain_text: string }[] };
     내용: { type: "rich_text"; rich_text: { plain_text: string }[] };
@@ -91,18 +100,63 @@ type NotionPageMeta = {
   };
 };
 
-// --- 2. 렌더링 헬퍼 함수: Notion 데이터를 UI 렌더링에 적합한 형태로 변환 ---
+// full Route Cache 설정
+export async function generateStaticParams() {
+  const resulta = await queryNotionDatabase<ReponseType>(
+    `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
+    {},
+    { cache: "force-cache" }
+  );
 
+  return resulta.results.map((item) => ({
+    id: item.id + "",
+  }));
+}
+
+//Meta Data 설정
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id: postId } = await params;
+
+  const header: RequestInit = {
+    method: "GET",
+    headers: {
+      "Notion-Version": "2022-06-28",
+      authorization: `Bearer ${NOTION_TOKEN}`,
+    },
+    cache: "force-cache",
+    next: { tags: [`${REVADILTE_PRE.POST_METADATA}:${postId}`] },
+  };
+
+  const response = await fetch(
+    `${NOTION_BASE_URL}/${NOTION_SEGMENT.DETAIL_META}/${postId}`,
+    {
+      ...header,
+    }
+  );
+
+  const result = (await response.json()) as NotionPageMeta;
+  return {
+    title: result.properties.제목.title[0].plain_text,
+    description: result.properties.내용.rich_text[0].plain_text,
+    keywords: result.properties.stack.multi_select.map((e) => e.name),
+    openGraph: {
+      title: result.properties.제목.title[0].plain_text,
+      description: result.properties.내용.rich_text[0].plain_text,
+    },
+  };
+}
+
+// --- 2. 렌더링 헬퍼 함수: Notion 데이터를 UI 렌더링에 적합한 형태로 변환 ---
 const renderBlock = (block: NotionBlock) => {
-  console.log(block);
   const { type, id } = block;
   const value = block[type];
 
-  console.log("block!", block);
-
   switch (type) {
     case "paragraph":
-      console.log(block.paragraph?.rich_text);
       return (
         <p key={id} className="leading-relaxed">
           {value.rich_text.length === 0
@@ -195,16 +249,17 @@ export default async function Page({
       "Notion-Version": "2022-06-28",
       authorization: `Bearer ${NOTION_TOKEN}`,
     },
-    cache: "no-cache",
+    cache: "force-cache",
   };
 
   const [contentsRes, metaRes] = await Promise.all([
     fetch(
       `${NOTION_BASE_URL}/${NOTION_SEGMENT.DETAIL_CONTENTS}/${postId}/children`,
-      { ...header }
+      { ...header, next: { tags: [`${REVADILTE_PRE.POST}:${postId}`] } }
     ),
     fetch(`${NOTION_BASE_URL}/${NOTION_SEGMENT.DETAIL_META}/${postId}`, {
       ...header,
+      next: { tags: [`${REVADILTE_PRE.POST_METADATA}:${postId}`] },
     }),
   ]);
 
@@ -235,6 +290,7 @@ export default async function Page({
             Accept: "application/vnd.github.v3+json",
           },
           cache: "force-cache",
+          next: { tags: [`${REVADILTE_PRE.GIT}:${postId}`] },
         }
       );
       if (res.ok) {
@@ -272,6 +328,7 @@ export default async function Page({
           </div>
         </div>
       </div>
+      <RevaildateController postId={postId} repoName={repoName} />
 
       {/* Meta Info Section */}
       <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 py-5 border-b border-zinc-200 dark:border-zinc-800">
@@ -295,7 +352,7 @@ export default async function Page({
               {metaData.properties.stack.multi_select.map((stack) => (
                 <span
                   key={stack.id}
-                  className="bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 px-2 py-1 rounded-md text-sm"
+                  className="bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 px-2 py-1 rounded-md text-xs"
                 >
                   {stack.name}
                 </span>
@@ -305,16 +362,30 @@ export default async function Page({
         )}
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium text-zinc-500">Published</p>
-          <p className="text-base">
+          <p className="text-sm mt-1">
             {new Date(
-              metaData.properties.작성일.date?.start as string
-            ).toLocaleDateString("en-US", {
+              metaData.created_time.toLocaleString() as string
+            ).toLocaleDateString("ko", {
               year: "numeric",
               month: "long",
               day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
             })}
           </p>
         </div>
+      </div>
+      <div className="text-xs text-zinc-500 ml-auto mt-2 ">
+        최신 갱신일{" "}
+        {new Date(
+          metaData.last_edited_time.toLocaleString() as string
+        ).toLocaleDateString("ko", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
       </div>
 
       {/* Main Content Section */}
@@ -384,7 +455,7 @@ export default async function Page({
                           </td>
                         );
                       },
-                      code({ node, className, children, ...props }) {
+                      code({ className, children, ...props }) {
                         const match = /language-(\w+)/.exec(className || "");
                         return match ? (
                           <CodeViewer

@@ -1,4 +1,5 @@
-import { Github, Twitter, Rss } from "lucide-react";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 export default function Footer() {
   return (
@@ -6,15 +7,23 @@ export default function Footer() {
       <div className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">
           <p className="text-xs">개인라이브러리 아카이브</p>{" "}
-          <div className="py-3 flex flex-col gap-1">
-            <p className="text-indigo-400 text-xs underline">
-              https://www.h-creations.com/
-            </p>{" "}
-            <p className="text-indigo-400 text-xs underline">
+          <div className="py-3 flex flex-col gap-2">
+            <Link
+              target="_blank"
+              href={"https://www.h-creations.com"}
+              className="text-indigo-400 text-xs underline"
+            >
+              https://www.h-creations.com
+            </Link>
+            <Link
+              target="_blank"
+              href={"https://www.blog.h-creations.com/"}
+              className="text-indigo-400 text-xs underline"
+            >
               https://www.blog.h-creations.com/
-            </p>{" "}
+            </Link>
           </div>
-          <p>
+          <p className="pt-5 text-xs">
             &copy; {new Date().getFullYear()} H-Creations. All Rights Reserved.
           </p>
         </div>

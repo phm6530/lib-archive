@@ -88,9 +88,8 @@ export default async function Home() {
         title="Personal Library"
         description="React,Next에서 주요 사용될 개인라이브러리 모음입니다."
       />
-      <div className="grid grid-cols-1  gap-4">
+      <div className="grid grid-cols-2  gap-4 ">
         {posts.map((post, idx) => {
-          console.log(post.stack);
           return (
             <Link
               href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}

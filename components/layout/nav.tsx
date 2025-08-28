@@ -1,5 +1,9 @@
 "use client";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -7,7 +11,19 @@ import { getCategories } from "./action/nav-action";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Briefcase, Github, Rss } from "lucide-react";
+import {
+  Book,
+  BookA,
+  Briefcase,
+  Github,
+  Presentation,
+  Rss,
+  TestTube,
+  User,
+  Workflow,
+} from "lucide-react";
+import SignIn from "../modal-login";
+import { useEffect, useState } from "react";
 
 export default function Component() {
   const pathname = usePathname();
@@ -19,7 +35,6 @@ export default function Component() {
   });
 
   const categories = data ?? [{ name: "Home", path: "/" }];
-
   return (
     <header className="border-b ">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -43,54 +58,86 @@ export default function Component() {
 
         <div className="flex items-center  max-md:hidden">
           {/* GitHub Icon */}
-          <Button
-            asChild
-            variant={"ghost"}
-            size={"icon"}
-            className="text-muted-foreground hover:text-primary"
-          >
-            <Link
-              href={"https://github.com/phm6530/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <Github className="h-5 w-5" />
-            </Link>
-          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                asChild
+                variant={"ghost"}
+                size={"icon"}
+                className="text-muted-foreground hover:text-primary"
+              >
+                <Link
+                  href={"https://github.com/phm6530/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Git</p>
+            </TooltipContent>
+          </Tooltip>
 
           {/* Portfolio Icon */}
-          <Button
-            asChild
-            variant={"ghost"}
-            size={"icon"}
-            className="text-muted-foreground hover:text-primary"
-          >
-            <Link
-              href={"https://www.h-creations.com/"} // Placeholder link
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Briefcase className="h-5 w-5" />
-            </Link>
-          </Button>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                asChild
+                variant={"ghost"}
+                size={"icon"}
+                className="text-muted-foreground hover:text-primary"
+              >
+                <Link
+                  href={"https://www.h-creations.com/"} // Placeholder link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Presentation className="h-5 w-5" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Portpolio</p>
+            </TooltipContent>
+          </Tooltip>
 
           {/* Blog Icon */}
-          <Button
-            asChild
-            variant={"ghost"}
-            size={"icon"}
-            className="text-muted-foreground hover:text-primary"
-          >
-            <Link
-              href={"https://blog.h-creations.com/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Blog"
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                asChild
+                variant={"ghost"}
+                size={"icon"}
+                className="text-muted-foreground hover:text-primary"
+              >
+                <Link
+                  href={"https://blog.h-creations.com/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Blog"
+                >
+                  <Book className="h-5 w-5" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>blog</p>
+            </TooltipContent>
+          </Tooltip>
+          <SignIn>
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              className="text-muted-foreground hover:text-primary cursor-pointer bg-transparent"
             >
-              <Rss className="h-5 w-5" />
-            </Link>
-          </Button>
+              <User className="h-5 w-5" />
+            </Button>
+          </SignIn>
         </div>
       </div>
     </header>

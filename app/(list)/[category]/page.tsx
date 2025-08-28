@@ -5,53 +5,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { notFound } from "next/navigation";
 import { ReponseType } from "../page";
-import {
-  NOTION_BASE_URL,
-  NOTION_ID,
-  NOTION_SEGMENT,
-  NOTION_TOKEN,
-} from "@/app/constant/var";
+import { NOTION_ID, NOTION_SEGMENT } from "@/app/constant/var"; // NOTION_BASE_URL is now used in notion-service
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import SubNav from "@/app/_components/sub-nav";
+import { queryNotionDatabase } from "@/lib/notion-service"; // New import
 
 export default async function LibsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ category: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { category } = await params;
+  const resolvedSearchParams = await searchParams;
+  const keyword = resolvedSearchParams?.keyword as string | undefined;
 
-  const response = await fetch(
-    `${NOTION_BASE_URL}/${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
-    {
-      method: "POST",
-      headers: {
-        "Notion-Version": "2022-06-28",
-        authorization: `Bearer ${NOTION_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-      body: JSON.stringify({
-        filter: {
-          property: "카테고리",
-          select: {
-            equals: category,
-          },
-        },
-      }),
-    }
+  const categoryFilter = {
+    property: "카테고리",
+    select: {
+      equals: category,
+    },
+  };
+
+  const result = await queryNotionDatabase<ReponseType>(
+    `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
+    { filter: categoryFilter },
+    { cache: "no-store" }
   );
 
-  if (!response.ok) {
-    notFound();
-  }
-
-  const result = (await response.json()) as ReponseType;
   const posts = result.results.map((page) => {
     return {
       id: page.id,
@@ -64,6 +48,15 @@ export default async function LibsPage({
     };
   });
 
+  // Filter in code for precision
+  const filteredPosts = keyword
+    ? posts.filter(
+        (post) =>
+          post.제목.toLowerCase().includes(keyword.toLowerCase()) ||
+          post.내용.toLowerCase().includes(keyword.toLowerCase())
+      )
+    : posts;
+
   return (
     <>
       <SubNav />
@@ -72,7 +65,7 @@ export default async function LibsPage({
         description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
       />
       <div className="w-full grid grid-cols-2 gap-4 ">
-        {posts.map((post, idx) => (
+        {filteredPosts.map((post, idx) => (
           <Link
             href={`/${post.카테고리.toLocaleLowerCase()}/${post.id}`}
             key={`${post.id}-${idx}`}

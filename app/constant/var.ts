@@ -11,3 +11,10 @@ export enum NOTION_SEGMENT {
   DETAIL_META = "pages",
   LIST = "databases",
 }
+
+// revadiltetags
+export enum REVADILTE_PRE {
+  POST_METADATA = "POST_METADATA",
+  POST = "POST",
+  GIT = "GIT",
+}

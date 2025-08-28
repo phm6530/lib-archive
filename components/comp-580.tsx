@@ -1,9 +1,6 @@
-import { useId } from "react";
-import { SearchIcon } from "lucide-react";
-
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -24,8 +21,6 @@ const navigationLinks = [
 ];
 
 export default function Component() {
-  const id = useId();
-
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -130,18 +125,6 @@ export default function Component() {
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
-            {/* Search form */}
-            {/* <div className="relative">
-              <Input
-                id={id}
-                className="peer h-8 ps-8 pe-2"
-                placeholder="Search..."
-                type="search"
-              />
-              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
-                <SearchIcon size={16} />
-              </div>
-            </div> */}
           </div>
         </div>
         {/* Right side */}

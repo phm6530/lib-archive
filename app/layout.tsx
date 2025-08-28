@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="dark">
-      <body className="bg-zinc-900 ">
+      <body className="bg-gradient-to-l to-zinc-950 from-zinc-900 ">
         <Providers>
           <Grid>
             {" "}
