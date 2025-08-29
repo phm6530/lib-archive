@@ -1,7 +1,8 @@
-import { NOTION_ID, NOTION_SEGMENT } from "../constant/var";
+import { NOTION_ID, NOTION_SEGMENT, REVADILTE_PRE } from "../constant/var";
 import HeroBanner from "../_components/hero";
 import { queryNotionDatabase } from "@/lib/notion-service";
 import Libitem from "../_components/lib-item";
+import ListRevaildateController from "./_components/list-revaildate-controller";
 
 export interface NotionPage {
   id: string;
@@ -46,10 +47,12 @@ export default async function Home({
 }) {
   const resolvedSearchParams = await searchParams;
   const keyword = resolvedSearchParams?.keyword as string | undefined;
+
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
     {},
-    { cache: "force-cache", revalidate: 3600 }
+    // revalidateTag를 위해 태그 추가
+    { cache: "force-cache", tags: [REVADILTE_PRE.ALL_LIST] }
   );
 
   const posts = result.results.map((page) => {
@@ -79,6 +82,9 @@ export default async function Home({
         title={`Personal\nLibrary`}
         description="React,Next에서 주요 사용될 개인라이브러리 모음입니다."
       />
+      <div className="my-4">
+        <ListRevaildateController />
+      </div>
       <div className="grid md:grid-cols-2  gap-4 ">
         {filteredPosts.map((post, idx) => {
           return <Libitem key={`post-${idx}`} {...post} />;

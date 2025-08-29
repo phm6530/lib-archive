@@ -1,22 +1,18 @@
 import HeroBanner from "@/app/_components/hero";
-
 import { ReponseType } from "../page";
-import { NOTION_ID, NOTION_SEGMENT } from "@/app/constant/var"; // NOTION_BASE_URL is now used in notion-service
-
+import { NOTION_ID, NOTION_SEGMENT, REVADILTE_PRE } from "@/app/constant/var";
 import SubNav from "@/app/_components/sub-nav";
-import { queryNotionDatabase } from "@/lib/notion-service"; // New import
-import Libitem from "@/app/_components/lib-item";
+import { queryNotionDatabase } from "@/lib/notion-service";
+import SearchableList from "./searchable-list";
+
+import CategoryRevaildateController from "./_components/category-revaildate-controller";
 
 export default async function LibsPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { category } = await params;
-  const resolvedSearchParams = await searchParams;
-  const keyword = resolvedSearchParams?.keyword as string | undefined;
 
   const categoryFilter = {
     property: "카테고리",
@@ -25,10 +21,12 @@ export default async function LibsPage({
     },
   };
 
+  // 페이지가 요청될 때마다 항상 새로운 데이터를 가져옵니다. (Data-Cache)
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
     { filter: categoryFilter },
-    { cache: "force-cache", revalidate: 3600 }
+
+    { cache: "force-cache", tags: [REVADILTE_PRE.CATEGORY, category] }
   );
 
   const posts = result.results.map((page) => {
@@ -43,14 +41,6 @@ export default async function LibsPage({
     };
   });
 
-  const filteredPosts = keyword
-    ? posts.filter(
-        (post) =>
-          post.제목.toLowerCase().includes(keyword.toLowerCase()) ||
-          post.내용.toLowerCase().includes(keyword.toLowerCase())
-      )
-    : posts;
-
   return (
     <>
       <SubNav />
@@ -58,11 +48,11 @@ export default async function LibsPage({
         title={category.charAt(0).toUpperCase() + category.slice(1)}
         description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
       />
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        {filteredPosts.map((post, idx) => (
-          <Libitem key={`${post.id}-${idx}`} {...post} />
-        ))}
+      <div className="my-4">
+        <CategoryRevaildateController category={category} />
       </div>
+
+      <SearchableList initialPosts={posts} />
     </>
   );
 }

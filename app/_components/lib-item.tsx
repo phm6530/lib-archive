@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 
 import { Badge } from "@/components/ui/badge";
-import { ChartBarStacked, Library, LibrarySquare } from "lucide-react";
+import { ChartBarStacked } from "lucide-react";
 export default function Libitem(post: {
   id: string;
   url: string;

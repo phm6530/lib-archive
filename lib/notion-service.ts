@@ -11,7 +11,7 @@ interface NotionQueryBody {
 export async function queryNotionDatabase<T>(
   endpoint: string,
   body: NotionQueryBody,
-  options?: { cache?: RequestCache; revalidate?: number }
+  options?: { cache?: RequestCache; revalidate?: number; tags?: Array<string> }
 ): Promise<T> {
   const url = `${NOTION_BASE_URL}/${endpoint}`;
 
