@@ -24,9 +24,12 @@ export default async function LibsPage({
   // 페이지가 요청될 때마다 항상 새로운 데이터를 가져옵니다. (Data-Cache)
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
-    { filter: categoryFilter },
-
-    { cache: "force-cache", tags: [REVADILTE_PRE.CATEGORY, category] }
+    {
+      method: "POST",
+      cache: "force-cache",
+      body: { filter: categoryFilter },
+      next: { tags: [`${REVADILTE_PRE.CATEGORY}`, category] },
+    }
   );
 
   const posts = result.results.map((page) => {
@@ -48,7 +51,7 @@ export default async function LibsPage({
         title={category.charAt(0).toUpperCase() + category.slice(1)}
         description="React, Next에서 주요 사용될 개인 라이브러리 모음입니다."
       />
-      <div className="my-4">
+      <div className="mb-5">
         <CategoryRevaildateController category={category} />
       </div>
 

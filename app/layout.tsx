@@ -32,7 +32,7 @@ export default async function RootLayout({
         "Notion-Version": "2022-06-28",
         authorization: `Bearer ${NOTION_TOKEN}`,
       },
-      tags: ["categories"],
+      next: { tags: ["categories"] },
       cache: "force-cache",
     }
   );

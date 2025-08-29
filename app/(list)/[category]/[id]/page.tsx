@@ -103,8 +103,7 @@ type NotionPageMeta = {
 export async function generateStaticParams() {
   const resulta = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
-    {},
-    { cache: "force-cache" }
+    { method: "POST", cache: "force-cache" }
   );
 
   return resulta.results.map((item) => ({

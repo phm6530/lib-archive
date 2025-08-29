@@ -50,9 +50,11 @@ export default async function Home({
 
   const result = await queryNotionDatabase<ReponseType>(
     `${NOTION_SEGMENT.LIST}/${NOTION_ID}/query`,
-    {},
-    // revalidateTag를 위해 태그 추가
-    { cache: "force-cache", tags: [REVADILTE_PRE.ALL_LIST] }
+    {
+      method: "POST",
+      cache: "force-cache",
+      next: { tags: [REVADILTE_PRE.ALL_LIST] },
+    }
   );
 
   const posts = result.results.map((page) => {
