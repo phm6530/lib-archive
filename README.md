@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Notion 기반 아카이브
 
-## Getting Started
+## 🚀 주요 기능
+1. **Notion 기반 CMS**
+   - Notion 관계형 테이블을 활용하여 게시판형 아카이브 구성
+   - 데이터베이스 설계 과정 없이 빠른 구축 가능
+   - CRUD + 확장성 보장
 
-First, run the development server:
+2. **GitHub API + Sandbox Demo**
+   - Repository 컬럼 기반으로 README를 불러와 일정한 스타일로 출력
+   - Sandbox Demo를 브라우저에서 바로 확인 가능
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+3. **Next.js 캐싱 설계**
+   - Notion API 호출 제한(시간당 60회)을 **Full Route Cache + Revalidate Tags**로 해결
+   - 관리자(Auth.js 인증)만 갱신 버튼을 통해 페이지 업데이트 가능
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 아키텍처
+- **DB**: Notion Table  
+- **Frontend**: Next.js (Full Route Cache + Revalidate Tags)  
+- **Auth**: Auth.js + 커스텀 Blog API (관리자 계정 활용)  
+- **UI**: Shadcn-ui + Tailwind v4  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ✨ 차별점
+- Notion DB를 CMS처럼 변환 → 빠른 구축과 운영 가능  
+- GitHub API + Sandbox Demo 제공 → 단순 아카이브를 넘어 실사용에 가까운 체험 제공  
+- 관리자 전용 갱신 기능 → 운영 편의성과 안정성 확보  
+- Full Route Cache 설계를 통한 **높은 Web Vitals 성능 지표** 달성  
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
