@@ -291,6 +291,8 @@ export default async function Page({
           next: { tags: [`${REVADILTE_PRE.GIT}:${postId}`] },
         }
       );
+
+      console.log(res);
       if (res.ok) {
         const data = await res.json();
         markdown = Buffer.from(data.content, "base64").toString("utf-8");
